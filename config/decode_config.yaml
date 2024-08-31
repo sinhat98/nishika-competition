@@ -1,0 +1,11 @@
+asr_additional_kwargs: {}
+asr_beam_size: 10
+asr_ctc_weight: 0.3
+asr_device: null
+asr_lm_weight: 0.0
+asr_maxlenratio: 1.0
+asr_nbest: 1
+vad_device: null
+vad_min_duration_off: 1.0
+vad_min_duration_on: 0.5
+merge_segments: false

@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "nishika"
+version = "0.1.0"
+description = ""
+authors = ["sinhat98 <sinhat897205@gmail.com>"]
+readme = "README.md"
+packages = [{include = "speq_eval"}]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.12"
+pydub = "^0.25.1"
+pandas = "*"
+polars = "*"
+scipy = "^1.13.1"
+tqdm = "^4.66.4"
+torch = "*"
+torchaudio = "*"
+torchvision = "*"
+pyannote-audio = "*"
+silero-vad = "*"
+matplotlib = "==3.4.0"
+numpy = "*"
+espnet = "==202402"
+python-dotenv = "*"
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

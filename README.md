@@ -3336,7 +3336,7 @@ poetry install
 
 #### expディレクトリから作成
 ```bash
-expnet_exp_dir=espnet/egs2/nishika/asr1/exp
+espnet_exp_dir=espnet/egs2/nishika/asr1/exp
 mkdir models
 cp -r "${espnet_exp_dir}/asr_stats_raw_jp_char_sp" models/asr_stats_raw_jp_char_sp
 cp -r "${espnet_exp_dir}/lm_stats_jp_char" models/lm_stats_jp_char

@@ -3298,7 +3298,7 @@ best_model_criterion:
     - loss
     - min
 keep_nbest_models: 1
-
+```
 </details>
 
 #### 訓練scriptの実行

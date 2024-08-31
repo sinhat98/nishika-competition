@@ -4,14 +4,21 @@ from pathlib import Path
 import yaml
 import pandas as pd
 import datetime
+import re
 from copy import deepcopy
 
 CUR_DIR = Path(__file__).parent
-TEST_CSV_FILE = CUR_DIR / 'test.csv'
+TEST_CSV_FILE = CUR_DIR / 'nishika-data/test.csv'
 SUBMISSION_FILE_NAME = 'submission.csv'
 SAMPLE_SUBMISSION_CSV_FILE = CUR_DIR / 'sample_submission.csv'
 
 SUBMISSION_DIR = CUR_DIR / 'submissions'
+
+
+def remove_spaces(text):
+    # 半角スペース(\s)と全角スペース(\u3000)を空文字に置換
+    return re.sub(r'[\s\u3000]', '', text)
+
 
 def main():
     parser = ArgumentParser()
@@ -95,6 +102,11 @@ def main():
             index=False
         )
         first_write_segments = False
+    
+    # post process
+    df = pd.read_csv(submission_file)
+    df['target'] = df['target'].map(remove_spaces)
+    df.to_csv(submission_file, index=False)
 
     print("処理が完了しました。")
 

@@ -3192,8 +3192,12 @@ lm_train_text="data/train/lm_train.txt"
  "$@"
 ```
 </details>
+
 <details>
+
 <summary>espnet/egs2/nishika/asr1/conf/train_asr_reazon_ft.yaml</summary>
+
+```yaml
 # This configuration requires 4 GPUs with 32GB memory
 batch_type: numel
 batch_bins: 20000000
@@ -3265,11 +3269,15 @@ specaug_conf:
     num_time_mask: 2
     
 ignore_init_mismatch: true
+```
 
 </details>
 
 <details>
+
 <summary>espnet/egs2/nishika/asr1/conf/train_lm_reazon.yaml</summary>
+
+```yaml
 optim: sgd
 patience: 3
 max_epoch: 40

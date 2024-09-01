@@ -19,13 +19,14 @@ make
 ##### 青空文庫のテキストデータをダウンロード
 ルートディレクトリに移動した以下を実行
 ```bash
-cd aozora
+cd ../../aozora
 wget https://lab.ndl.go.jp/dataset/hurigana-speech-corpus-aozora/aozora_work_part1.zip
 wget https://lab.ndl.go.jp/dataset/hurigana-speech-corpus-aozora/aozora_work_part2.zip
 unzip aozora_work_part1.zip
 unzip aozora_work_part2.zip
-python format_dirname.py aozora_work_part1
-python format_dirname.py aozora_work_part2
+sudo apt-get install convmv
+convmv -f shift-jis -t utf-8 --notest aozora_work_part1/*.zip
+convmv -f shift-jis -t utf-8 --notest aozora_work_part2/*.zip
 python unzip_all.py aozora_work_part1
 python unzip_all.py aozora_work_part2
 python make_segments.py

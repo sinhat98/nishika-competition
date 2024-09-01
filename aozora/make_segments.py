@@ -9,14 +9,17 @@ from tqdm import tqdm
 
 cur_dir = Path(__file__).parent
 
+def load_file_list():
+    with open(cur_dir / "file_list.txt") as f:
+        file_list = f.readlines()
+    return file_list
+
 def generate_custom_id():
     # 文字列を大文字に変換し、ランダムな位置に '4' と 'w' を追加
     random_chars = random.choices(string.ascii_letters + string.digits, k=14)
     custom_id = ''.join(random_chars[:6]) + '4' + ''.join(random_chars[6:12]) + 'w' + ''.join(random_chars[12:])
     
     return custom_id
-
-print(generate_custom_id())
 
 def normalize_text(text):
     text = re.sub(r'――', ' ', text)
@@ -31,22 +34,11 @@ def normalize_text(text):
     text = re.sub(r'〜', '', text)
     text = re.sub(r'\s+', ' ', text)
     return text
-
-p_1 = cur_dir / "aozora_work_part1"
-p_2 = cur_dir / "aozora_work_part2"
-text_files = list(p_1.glob('**/*.txt')) + list(p_2.glob('**/*.txt'))
-print(len(text_files))
-
-with open('text_files.txt', 'w') as f:
-    for text_file in text_files:
-        try:
-            f.write(f'{str(text_file).split("/", 2)[-1]}\n')
-        except BaseException:
-            continue
-
+file_list = load_file_list()
 text_dict = {}
 g = open('segments.txt', 'w')
-for text_file in tqdm(text_files):
+for text_file in tqdm(file_list):
+    text_file = cur_dir / text_file.strip()
     fileid = generate_custom_id()
     with open(text_file, 'r') as f:
         lines = f.readlines()

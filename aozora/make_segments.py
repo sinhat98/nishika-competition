@@ -4,7 +4,6 @@ from pathlib import Path
 import random
 import string
 
-
 from tqdm import tqdm
 
 cur_dir = Path(__file__).parent
@@ -12,6 +11,12 @@ cur_dir = Path(__file__).parent
 def load_file_list():
     with open(cur_dir / "file_list.txt") as f:
         file_list = f.readlines()
+    return file_list
+
+def load_all_files():
+    p1 = cur_dir / "aozora_work_part1"
+    p2 = cur_dir / "aozora_work_part2"
+    file_list = list(p1.glob('**/*.txt')) + list(p2.glob('**/*.txt'))
     return file_list
 
 def generate_custom_id():
@@ -34,11 +39,18 @@ def normalize_text(text):
     text = re.sub(r'〜', '', text)
     text = re.sub(r'\s+', ' ', text)
     return text
-file_list = load_file_list()
+
 text_dict = {}
-g = open('segments.txt', 'w')
+file_list = load_all_files()
+print(len(file_list))
+with open('file_list.txt', 'w') as f:
+    for text_file in file_list:
+        f.write(str(text_file) + '\n')
+
+g = open('lm_train.txt', 'w')
 for text_file in tqdm(file_list):
-    text_file = cur_dir / text_file.strip()
+    if isinstance(text_file, str):
+        text_file = cur_dir / text_file.strip()
     fileid = generate_custom_id()
     with open(text_file, 'r') as f:
         lines = f.readlines()

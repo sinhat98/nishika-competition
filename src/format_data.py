@@ -15,7 +15,7 @@ def main(args):
     id2path = df_train[['ID', 'audio_path']].set_index('ID')['audio_path'].to_dict()
     df_details['audio_path'] = df_details['ID'].map(id2path)
     df_details['audio_path'] = df_details['audio_path'].map(
-        lambda x: f"ffmpeg -i {str(Path(x).resolve())} -ar 16000 -ac 1 -f wav - |")
+        lambda x: f"ffmpeg -i {(Path(__file__).parents[1] / 'nishika-data' / x).resolve()} -ar 16000 -ac 1 -f wav - |")
     
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)

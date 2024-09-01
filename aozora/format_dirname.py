@@ -17,7 +17,7 @@ def main():
             files = list(path.glob('*収集率*'))
             file = files[0] if files else None
             if file:
-                new_dirname = file.stem.split('_')[-1]
+                new_dirname = file.stem.split('_', 1)[-1]
                 new_path = path.with_name(new_dirname)
                 path.rename(new_path)
                 print(f'Renamed to {new_path}')

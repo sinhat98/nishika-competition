@@ -163,7 +163,7 @@ models.zipをルートディレクトリ配下に配置して解凍してくだ�
 poetry run python src/inference_with_step_log.py models --config_file conf/best_decode_config.yaml
 ```
 
-#### T$を4枚用いる場合
+#### T4を4枚用いる場合
 
 ```bash
 bash run.sh

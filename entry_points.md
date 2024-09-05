@@ -12,25 +12,10 @@ make
 ```
 
 ### nishika用のレシピ作成
-#### データのダウンロード
-##### コンペ用データをダウンロード
-[こちら](https://competition.nishika.com/competitions/audio_book_transcription/data)からnishikaのコンペデータをダウンロードしてnishika-dataディレクトリに配置する。
-```bash
-cd nishika-data
-unzip train.zip test.zip
-```
-最終的に以下の構造になる。
-```
-nishika-data/
-├── data_explanation.xlsx
-├── test.csv
-├── test.zip
-├── train.csv
-├── train.zip
-└── train_details.csv
-```
 
-##### 青空文庫のテキストデータをダウンロード
+#### 青空文庫のテキストデータをダウンロード
+※最終生成物lm_train.txtは生成済みのものを同封しているのでこの作業はskipできます。
+
 ルートディレクトリに移動した以下を実行
 zipの解凍方法は最終的に文字化けせずに解凍できればどんな方法でも構いません。
 ```bash
@@ -60,6 +45,7 @@ LfWDrG4n8FK8Twxq_0004 生活というものの威力のために
 ```
 
 
+`lm_train.txt`を作る際に使用したテキストファイルの一覧は以下の通りです。<br>
 [実際に訓練に用いたテキストファイル名一覧](aozora/file_list.txt)
 
 
@@ -122,36 +108,26 @@ exp
 
 ## Inference
 ### 環境構築
-何らかのpython環境を構築済みであることを仮定
 
 ```bash
+# pythonの環境構築
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+pyenv install 3.10.14
+pyenv local 3.10.14
 pip install poetry
 poetry lock
 poetry install
 ```
 
-### モデルの準備
-
-#### expディレクトリから作成
-```bash
-espnet_exp_dir=espnet/egs2/nishika/asr1/exp
-mkdir models
-cp -r "${espnet_exp_dir}/asr_stats_raw_jp_char_sp" models/asr_stats_raw_jp_char_sp
-cp -r "${espnet_exp_dir}/lm_stats_jp_char" models/lm_stats_jp_char
-cp -r "${espnet_exp_dir}/asr_stats_raw_jp_char_sp" models/asr_stats_raw_jp_char_sp
-cp "${espnet_exp_dir}/asr_train_asr_reazon_ft_raw_jp_char_sp/valid.acc.ave_3best.pth" models/asr.pth
-cp "${espnet_exp_dir}/lm_train_lm_reazon_jp_char/valid.loss.ave_1best.pth" models/lm.pth
-```
-
-#### huggingface hubから訓練済みモデルをダウンロード
-`sinhat98/nishika-competition`にモデルをアップロード済みなのでここからダウンロード
-
-```bash
-poetry run huggingface-cli login # tokenを入力してログイン
-HF_HUB_ENABLE_HF_TRANSFER=1 poetry run huggingface-cli download sinhat98/nishika-competition # リポジトリをダウンロード
-```
-
 #### 推論コードの実行
 ```bash
+# GPU1枚で推論させる場合(2日程度かかります)
 poetry run python src/inference_with_step_log.py models --config_file conf/best_decode_config.yaml
+```
+
+```bash
+# GPUを4枚使用する場合(12h程度で完了します)
+bash run.sh
 ```

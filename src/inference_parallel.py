@@ -20,10 +20,12 @@ def main():
     parser.add_argument('--config_file', type=str, default=None)
     parser.add_argument('--result_csv_file', type=str, default=None)
     parser.add_argument('--split_num', type=int, default=None)
+    parser.add_argument('--write_header', action='store_true')
     args = parser.parse_args()
     
     result_csv_file = args.result_csv_file
     processed_row_num = -1
+    first_write_segments = args.write_header
     if result_csv_file is not None:
         result_csv_file = Path(result_csv_file)
         result_df = pd.read_csv(result_csv_file)
@@ -111,7 +113,7 @@ def main():
             segments_file, 
             mode='a', 
             header=first_write_segments, 
-            index=False
+            index=False,
         )
         first_write_segments = False
 

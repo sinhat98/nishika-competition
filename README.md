@@ -101,6 +101,7 @@ git lfs install
 git clone https://huggingface.co/reazon-research/reazonspeech-espnet-v2 "${espnet_dir}/reazonspeech-espnet-v2"
 ```
 
+
 #### 訓練scriptの実行
 ```bash
 cd espnet/egs2/nishika/asr1
@@ -151,7 +152,19 @@ poetry run huggingface-cli login # tokenを入力してログイン
 HF_HUB_ENABLE_HF_TRANSFER=1 poetry run huggingface-cli download sinhat98/nishika-competition # リポジトリをダウンロード
 ```
 
-#### 推論コードの実行
+#### 提出してmodels.zipを用いる場合
+models.zipをルートディレクトリ配下に配置して解凍してください。
+
+
+### 推論コードの実行
+#### T4 1枚で推論
+
 ```bash
 poetry run python src/inference_with_step_log.py models --config_file conf/best_decode_config.yaml
+```
+
+#### T4を4枚用いる場合
+
+```bash
+bash run.sh
 ```

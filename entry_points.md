@@ -110,12 +110,14 @@ exp
 ### 環境構築
 
 ```bash
-# pythonの環境構築
+# pythonの環境構築 (python環境が用意されていない場合)
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 pyenv install 3.10.14
 pyenv local 3.10.14
+
+# vertex aiのインスタンスはpython環境が準備されているので
 pip install poetry
 poetry lock
 poetry install

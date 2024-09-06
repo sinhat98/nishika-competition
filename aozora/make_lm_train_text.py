@@ -41,11 +41,7 @@ def normalize_text(text):
     return text
 
 text_dict = {}
-file_list = load_all_files()
-print(len(file_list))
-with open('file_list.txt', 'w') as f:
-    for text_file in file_list:
-        f.write(str(text_file) + '\n')
+file_list = load_file_list()
 
 g = open('lm_train.txt', 'w')
 for text_file in tqdm(file_list):

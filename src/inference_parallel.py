@@ -1,10 +1,13 @@
-from argparse import ArgumentParser
-from speech_to_text import SpeechToText, TranscribeConfig
-from pathlib import Path
-import yaml
-import pandas as pd
 import datetime
+import re
+from argparse import ArgumentParser
 from copy import deepcopy
+from pathlib import Path
+
+import pandas as pd
+import yaml
+
+from speech_to_text import SpeechToText, TranscribeConfig
 
 CUR_DIR = Path(__file__).parent
 DATA_DIR = CUR_DIR.parent / "nishika-data"
@@ -14,35 +17,30 @@ SAMPLE_SUBMISSION_CSV_FILE = DATA_DIR / 'sample_submission.csv'
 
 SUBMISSION_DIR = CUR_DIR.parent / 'submissions'
 
+
+def remove_spaces(text):
+    # 半角スペース(\s)と全角スペース(\u3000)を空文字に置換
+    return re.sub(r'[\s\u3000]', '', text)
+
 def main():
     parser = ArgumentParser()
     parser.add_argument('model_dir', type=str)
     parser.add_argument('--config_file', type=str, default=None)
     parser.add_argument('--result_csv_file', type=str, default=None)
     parser.add_argument('--split_num', type=int, default=None)
-    parser.add_argument('--write_header', action='store_true')
     args = parser.parse_args()
     
     result_csv_file = args.result_csv_file
     processed_row_num = -1
-    first_write_segments = args.write_header
     if result_csv_file is not None:
         result_csv_file = Path(result_csv_file)
         result_df = pd.read_csv(result_csv_file)
         processed_row_num = result_df.index.max()
         submission_dir = result_csv_file.parent
-    
-        # 最初の行を書き込むためのフラグ
-        first_write = False
-        first_write_segments = False
     else:
         datetime_str = datetime.datetime.now().strftime('%Y%m%d%H%M')
         submission_dir = SUBMISSION_DIR / datetime_str
         submission_dir.mkdir(parents=True, exist_ok=True)
-        
-        # 最初の行を書き込むためのフラグ
-        first_write = True
-        first_write_segments = True
     
     submission_file = submission_dir / SUBMISSION_FILE_NAME
     segments_file = submission_dir / 'segments.csv'
@@ -59,7 +57,6 @@ def main():
     config_dict.pop('asr_model_dir')
     with open(submission_dir / 'config.yaml', 'w') as f:
         yaml.safe_dump(config_dict, f)
-    
     
     split_num = args.split_num
     stt = SpeechToText(config)
@@ -86,7 +83,7 @@ def main():
             print(f"skip {i} entry")
             continue
         
-        audio_path = row['audio_path']
+        audio_path = DATA_DIR / row['audio_path']
         stt_results = stt.transcribe(audio_path)
         full_text = stt_results.text
         segments = stt_results.segments
@@ -95,11 +92,9 @@ def main():
         pd.DataFrame({'ID': [row['ID']], 'target': [full_text]}).to_csv(
             submission_file, 
             mode='a', 
-            header=first_write, 
+            header=False, 
             index=False
         )
-        first_write = False
-
         # セグメントをCSVに追加
         segments_data = [
             {
@@ -112,10 +107,18 @@ def main():
         pd.DataFrame(segments_data).to_csv(
             segments_file, 
             mode='a', 
-            header=first_write_segments, 
+            header=False, 
             index=False,
         )
-        first_write_segments = False
+        
+    df = pd.read_csv(submission_file)
+    if len(df) == len(test_df):
+        new_row = pd.DataFrame([['ID', 'target']], columns=['ID', 'target'])
+        # 新しい行をデータフレームの先頭に追加し、インデックスをリセット
+        df = pd.concat([new_row, df]).reset_index(drop=True)
+        df["target"] = df["target"].map(remove_spaces)
+        df.to_csv(submission_file, index=False, header=False)
+        
 
     print("処理が完了しました。")
 

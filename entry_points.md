@@ -153,14 +153,16 @@ pip install -r requirements.txt
 
 #### 推論コードの実行
 ```bash
+# こちらを推奨
+# GPUを4枚使用する場合(12h程度で完了します)
+bash run.sh
+```
+
+```bash
 # GPU1枚で推論させる場合(2日程度かかります)
 poetry run python src/inference_with_step_log.py models --config_file conf/best_decode_config.yaml
 ```
 
-```bash
-# GPUを4枚使用する場合(12h程度で完了します)
-bash run.sh
-```
 
 これによりsubmissionsに以下のような形で提出ファイルが作成される
 ```bash

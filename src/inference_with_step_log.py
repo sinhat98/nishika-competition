@@ -8,7 +8,8 @@ import re
 from copy import deepcopy
 
 CUR_DIR = Path(__file__).parent
-TEST_CSV_FILE = CUR_DIR / 'nishika-data/test.csv'
+DATA_DIR = CUR_DIR.parent / "nishika-data"
+TEST_CSV_FILE = DATA_DIR / 'test.csv'
 SUBMISSION_FILE_NAME = 'submission.csv'
 SAMPLE_SUBMISSION_CSV_FILE = CUR_DIR / 'sample_submission.csv'
 
@@ -72,7 +73,7 @@ def main():
             print(f"skip {i} entry")
             continue
         
-        audio_path = row['audio_path']
+        audio_path = DATA_DIR / row['audio_path']
         stt_results = stt.transcribe(audio_path)
         full_text = stt_results.text
         segments = stt_results.segments

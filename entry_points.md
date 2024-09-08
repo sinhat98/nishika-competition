@@ -1,10 +1,31 @@
 # Nishika
 
+## 内容物
+zipファイルを解凍すると以下のようなディレクトリ構造になる。
+
+```bash
+.
+├── README.md
+├── entry_points.md
+├── aozora
+├── config
+├── models
+├── nishika-recipe
+├── reazonspeech-espnet-v2
+├── pyproject.toml
+├── requirements.txt
+├── run.sh
+└── src
+```
+
+
 ## モデルの学習
+モデルの学習はespnetを用いて行う。
+
 
 ### espnetの環境構築
 ```bash
-git clone https://github.com/espnet/espnet.git
+git clone https://github.com/espnet/espnet.git -b v.202402
 cd espnet/tools
 ./setup_anaconda.sh miniconda espnet 3.10
 make
@@ -76,16 +97,6 @@ mv ${espnet_dir}/dump/raw/lm_train.txt ${espnet_dir}/dump/raw/lm_train_tmp.txt
 cat ${espnet_dir}/dump/raw/lm_train_tmp.txt aozora/lm_train.txt > espnet/egs2/nishika/asr1/dump/raw/lm_train.txt
 ```
 
-#### 事前学習モデル(ReazonSpeech)をダウンロード
-```bash
-espnet_dir="espnet/egs2/nishika/asr1"
-# git-lfsをインストール
-sudo apt-get install git-lfs
-git lfs install
-
-# huggingfaceのリポジトリをクローン
-git clone https://huggingface.co/reazon-research/reazonspeech-espnet-v2 "${espnet_dir}/reazonspeech-espnet-v2"
-```
 
 #### 訓練scriptの実行
 ```bash
@@ -106,7 +117,7 @@ exp
 └── lm_train_lm_reazon_jp_char
 ```
 
-## Inference
+## 推論(提出物の作成)
 ### 環境構築
 
 ```bash
@@ -117,10 +128,8 @@ eval "$(pyenv init -)"
 pyenv install 3.10.14
 pyenv local 3.10.14
 
-# vertex aiのインスタンスはpython環境が準備されているので
-pip install poetry
-poetry lock
-poetry install
+# python環境がすでに用意されている場合
+pip install requirements.txt
 ```
 
 #### 推論コードの実行
@@ -132,4 +141,12 @@ poetry run python src/inference_with_step_log.py models --config_file conf/best_
 ```bash
 # GPUを4枚使用する場合(12h程度で完了します)
 bash run.sh
+```
+
+これによりsubmissionsに以下のような形で提出ファイルが作成される
+```bash
+├── yyyyMMddHHmm(日時)
+    ├── config.yaml
+    ├── segments.csv
+    └── submission.csv
 ```

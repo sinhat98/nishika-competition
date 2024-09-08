@@ -9,7 +9,7 @@ import torch
 load_dotenv()
 
 # 環境変数を取得
-hf_token = os.getenv('HF_TOKEN')
+hf_token = os.getenv('HF_ACCESS_TOKEN')
 
 def load_model(device=None, min_duration_on=0.5, min_duration_off=1.0):
     if device is None:

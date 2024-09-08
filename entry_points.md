@@ -10,6 +10,7 @@ zipファイルを解凍すると以下のようなディレクトリ構造に�
 ├── aozora
 ├── config
 ├── models
+├── nishika-data
 ├── nishika-recipe
 ├── reazonspeech-espnet-v2
 ├── pyproject.toml
@@ -34,7 +35,7 @@ make
 
 ### nishika用のレシピ作成
 
-#### 青空文庫のテキストデータをダウンロード
+#### 青空文庫のテキストデータ(追加データ)をダウンロード
 ※最終生成物lm_train.txtは生成済みのものを同封しているのでこの作業はskipできます。
 
 ルートディレクトリに移動した以下を実行
@@ -69,10 +70,24 @@ LfWDrG4n8FK8Twxq_0004 生活というものの威力のために
 `lm_train.txt`を作る際に使用したテキストファイルの一覧は以下の通りです。<br>
 [実際に訓練に用いたテキストファイル名一覧](aozora/file_list.txt)
 
+#### コンペのデータをダウンロード
+`nishika-data`ディレクトリにコンペデータをダウンロードします。
+train.zipやtest.zipを解凍して以下の状態になっていれば良いです。
+
+```
+nishika-data/
+├── data_explanation.xlsx
+├── test.csv
+├── test
+├── train.csv
+├── train
+└── train_details.csv
+```
+
 
 #### レシピディレクトリ作成
 ```bash
-root=$(pwd)
+root=$(pwd) # ルートは最上位のディレクトリのパスです。
 espnet_dir="${root}/espnet/egs2/nishika/asr1"
 
 # nishikaレシピを作成
@@ -121,15 +136,15 @@ exp
 ### 環境構築
 
 ```bash
-# pythonの環境構築 (python環境が用意されていない場合)
+# pythonの環境構築
+sudo apt install build-essential curl wget zip git libssl-dev libbz2-dev libffi-dev liblzma-dev libreadline-dev libsqlite3-dev tk-dev
+git clone https://github.com/pyenv/pyenv.git ~/.pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 pyenv install 3.10.14
 pyenv local 3.10.14
-
-# python環境がすでに用意されている場合
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 
 [pyannote-audioのsegmentationモデル](https://huggingface.co/pyannote/segmentation-3.0)を使うために.envファイルにhuggingfaceのアクセストークンを設定します。

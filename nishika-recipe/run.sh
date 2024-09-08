@@ -32,6 +32,7 @@ speed_perturb_factors="0.9 1.0 1.1"
  --train_set "${train_set}" \
  --valid_set "${valid_set}" \
  --test_sets "${test_sets}" \
+ --lm_train_text "data/train/text" \
  --lm_dev_text "data/valid/text" \
  --speed_perturb_factors "${speed_perturb_factors}" \
  --pretrained_model $pretrained_model \

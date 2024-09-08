@@ -132,6 +132,10 @@ pyenv local 3.10.14
 pip install requirements.txt
 ```
 
+[pyannote-audioのsegmentationモデル](https://huggingface.co/pyannote/segmentation-3.0)を使うために.envファイルにhuggingfaceのアクセストークンを設定します。
+
+アクセストークンの詳細については[こちら](https://huggingface.co/docs/hub/security-tokens)を参照してください。
+
 #### 推論コードの実行
 ```bash
 # GPU1枚で推論させる場合(2日程度かかります)
